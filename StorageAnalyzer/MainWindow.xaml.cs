@@ -23,6 +23,10 @@ namespace StorageAnalyzer
         public MainWindow()
         {
             InitializeComponent();
+
+            this.DataContext = new ItemsViewModel();
         }
+
+
     }
 }
