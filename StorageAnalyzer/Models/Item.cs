@@ -13,7 +13,7 @@ namespace StorageAnalyzer
     {
         private string fullPath;
         private ObservableCollection<Item> childrenItems;
-        private int size;
+        private long size;
 
         public string FullPath
         {
@@ -63,7 +63,7 @@ namespace StorageAnalyzer
             }
         }
 
-        public int Size 
+        public long Size 
         { 
             get => size;
             set
@@ -80,10 +80,10 @@ namespace StorageAnalyzer
         public Item(string fullPath)
         {
             FullPath = fullPath;
-            Size = SetSize();
+            Size = GetSize();
         }
 
-        public abstract int SetSize();
+        public abstract long GetSize();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
