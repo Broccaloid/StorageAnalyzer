@@ -7,7 +7,10 @@ namespace StorageAnalyzer.Models
 {
     public class File : Item
     {
-        public File(string fullPath) : base(fullPath) { }
+        public File(string fullPath) : base(fullPath)
+        {
+            ChildrenItems.Clear();
+        }
 
         public override long GetSize()
         {
