@@ -41,7 +41,7 @@ namespace StorageAnalyzer
 
                 var lastIndex = normalizedPath.LastIndexOf('\\');
 
-                if (lastIndex <= 0)
+                if (lastIndex == normalizedPath.IndexOf('\\'))
                     return FullPath;
 
                 return FullPath.Substring(lastIndex + 1);
@@ -80,6 +80,8 @@ namespace StorageAnalyzer
         public Item(string fullPath)
         {
             FullPath = fullPath;
+            ChildrenItems = new ObservableCollection<Item>();
+            ChildrenItems.Add(null);
             Size = GetSize();
         }
 

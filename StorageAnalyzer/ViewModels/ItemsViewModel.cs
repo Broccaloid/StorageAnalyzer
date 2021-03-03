@@ -1,6 +1,8 @@
-﻿using System;
+﻿using StorageAnalyzer.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 
 namespace StorageAnalyzer
@@ -21,6 +23,18 @@ namespace StorageAnalyzer
                 items = value;
                 OnPropertyChanged();
             } 
+        }
+
+        public ItemsViewModel()
+        {
+            Items = new ObservableCollection<Item>();
+            foreach (var drive in DriveInfo.GetDrives())
+            {
+                if (drive.IsReady)
+                {
+                    Items.Add(new Drive(drive.Name));
+                }
+            }
         }
 
     }
