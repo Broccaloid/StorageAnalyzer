@@ -82,10 +82,7 @@ namespace StorageAnalyzer
             FullPath = fullPath;
             ChildrenItems = new ObservableCollection<Item>();
             ChildrenItems.Add(null);
-            Size = GetSize();
         }
-
-        public abstract long GetSize();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)

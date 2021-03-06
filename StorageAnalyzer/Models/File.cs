@@ -9,10 +9,11 @@ namespace StorageAnalyzer.Models
     {
         public File(string fullPath) : base(fullPath)
         {
+            Size = GetSize();
             ChildrenItems.Clear();
         }
 
-        public override long GetSize()
+        public long GetSize()
         {
             return new FileInfo(FullPath).Length;
         }

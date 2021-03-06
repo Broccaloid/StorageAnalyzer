@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace StorageAnalyzer.Models
 {
@@ -11,16 +11,19 @@ namespace StorageAnalyzer.Models
     {
         public Folder(string fullPath) : base(fullPath)
         {
-
+            SetSizeAsync();
         }
-        public override long GetSize()
+
+        private async Task SetSizeAsync()
         {
-            //var directory = new DirectoryInfo(FullPath);
+            Size = await GetSizeAsync();
+        }
+        private async Task<long> GetSizeAsync()
+        {
             long size = 0;
-            //foreach (var file in directory.GetFiles("*", SearchOption.AllDirectories))
-            foreach (var file in GetAllFiles(FullPath, "*"))
+            foreach (var file in await GetAllFilesAsync(FullPath))
             {
-                size += file.Length;
+                size += file.Size;
             }
             return size;
         }
@@ -47,20 +50,52 @@ namespace StorageAnalyzer.Models
             };
         }
 
-        private IEnumerable<String> GetAllFiles(string path, string searchPattern)
+        private async Task<List<DirectoryInfo>> GetAllDirectoriesAsync(string path)
         {
-            return System.IO.Directory.EnumerateFiles(path, searchPattern).Union(
-            System.IO.Directory.EnumerateDirectories(path).SelectMany(d =>
+            var mainFolder = new DirectoryInfo(path);
+            var allFolders = new List<DirectoryInfo>();
+            var tasks = new List<Task<List<DirectoryInfo>>>();
+            try
             {
-                try
+                foreach (var directory in mainFolder.GetDirectories())
                 {
-                    return GetAllFiles(d, searchPattern);
+                    if (directory.GetDirectories().Length != 0)
+                    {
+                        tasks.Add(GetAllDirectoriesAsync(directory.FullName));
+                    }
                 }
-                catch (UnauthorizedAccessException e)
+                var result = await Task.WhenAll(tasks);
+                foreach (var item in result)
                 {
-                    return Enumerable.Empty<String>();
+                    allFolders.AddRange(item);
                 }
-            }));
+            }
+            catch (UnauthorizedAccessException e)
+            {
+
+            }
+            return allFolders;
+        }
+
+        private async Task<List<Item>> GetAllFilesAsync(string path)
+        {
+            var allFiles = new List<Item>();
+            var tasks = new List<Task<List<Item>>>();
+            try
+            {
+                foreach (var folder in await GetAllDirectoriesAsync(path))
+                {
+                    foreach (var file in folder.GetFiles())
+                    {
+                        allFiles.Add(new File(file.FullName));
+                    }
+                }
+            }
+            catch(UnauthorizedAccessException e)
+            {
+               
+            }
+            return allFiles;
         }
     }
 }

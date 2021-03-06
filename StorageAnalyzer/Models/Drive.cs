@@ -10,6 +10,7 @@ namespace StorageAnalyzer.Models
     {
         public Drive(string fullPath) : base(fullPath)
         {
+            Size = GetSize();
             SetChildrenItems();
         }
 
@@ -23,7 +24,7 @@ namespace StorageAnalyzer.Models
             }
         }
 
-        public override long GetSize()
+        public long GetSize()
         {
             var drive = new DriveInfo(FullPath);
             return drive.TotalSize - drive.AvailableFreeSpace;
