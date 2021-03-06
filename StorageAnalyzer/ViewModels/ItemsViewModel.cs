@@ -11,18 +11,35 @@ namespace StorageAnalyzer
     {
         private ObservableCollection<Item> items;
 
-        public ObservableCollection<Item> Items 
-        { 
-            get => items; 
-            set 
-            { 
-                if(value == items)
+        public ObservableCollection<Item> Items
+        {
+            get => items;
+            set
+            {
+                if (value == items)
                 {
                     return;
                 }
                 items = value;
                 OnPropertyChanged();
-            } 
+            }
+        }
+
+        private RelayCommand getChildrenOnExpandCommand;
+        public RelayCommand GetChildrenOnExpandCommand
+        {
+            get
+            {
+                return getChildrenOnExpandCommand ??= new RelayCommand(obj =>
+                    {
+                        var item = obj as IExpandable;
+                        if (item == null)
+                        {
+                            return;
+                        }
+                        item.SetChildrenItems();
+                    });
+            }
         }
 
         public ItemsViewModel()
