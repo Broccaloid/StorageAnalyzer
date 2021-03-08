@@ -18,9 +18,9 @@
         </Grid.RowDefinitions>
         <TextBlock x:Name="Head" Text="App" Margin="5" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
         <TreeView x:Name="Folders" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Path=Items}">
-            <i:Interaction.Triggers>
+            <i:Interaction.Triggers >
                 <i:EventTrigger EventName="Expanded">
-                    <i:InvokeCommandAction Command="{Binding Path=GetChildrenOnExpandCommand}" />
+                    <i:InvokeCommandAction Command="{Binding Path=ExpandCommand}" CommandParameter="{Binding Path=Item}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <TreeView.ItemTemplate>

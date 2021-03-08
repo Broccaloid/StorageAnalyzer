@@ -28,26 +28,26 @@ namespace StorageAnalyzer.Models
             return size;
         }
 
-        public void SetChildrenItems()
+        public List<Item> GetChildrenItems()
         {
-            ChildrenItems.Clear();
-
+            var childrenItems = new List<Item>();
             try
             {
                 var drive = new DirectoryInfo(FullPath);
                 foreach (var dir in drive.GetDirectories())
                 {
-                    ChildrenItems.Add(new Folder(dir.FullName));
+                    childrenItems.Add(new Folder(dir.FullName));
                 }
                 foreach (var file in drive.GetFiles())
                 {
-                    ChildrenItems.Add(new File(file.FullName));
+                    childrenItems.Add(new File(file.FullName));
                 }
             }
             catch (UnauthorizedAccessException e)
             {
 
             };
+            return childrenItems;
         }
 
         private async Task<List<DirectoryInfo>> GetAllDirectoriesAsync(string path)

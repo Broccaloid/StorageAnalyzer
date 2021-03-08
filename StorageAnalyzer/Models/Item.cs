@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -12,7 +11,6 @@ namespace StorageAnalyzer
     public abstract class Item : INotifyPropertyChanged
     {
         private string fullPath;
-        private ObservableCollection<Item> childrenItems;
         private long size;
 
         public string FullPath
@@ -48,21 +46,6 @@ namespace StorageAnalyzer
             }
         }
 
-        public ObservableCollection<Item> ChildrenItems 
-        { 
-            get => childrenItems;
-            set
-            {
-                if (childrenItems == value)
-                {
-                    return;
-                }
-
-                childrenItems = value;
-                OnPropertyChanged();
-            }
-        }
-
         public long Size 
         { 
             get => size;
@@ -80,8 +63,6 @@ namespace StorageAnalyzer
         public Item(string fullPath)
         {
             FullPath = fullPath;
-            ChildrenItems = new ObservableCollection<Item>();
-            ChildrenItems.Add(null);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

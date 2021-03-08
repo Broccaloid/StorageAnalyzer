@@ -10,7 +10,6 @@ namespace StorageAnalyzer.Models
         public File(string fullPath) : base(fullPath)
         {
             Size = GetSize();
-            ChildrenItems.Clear();
         }
 
         public long GetSize()

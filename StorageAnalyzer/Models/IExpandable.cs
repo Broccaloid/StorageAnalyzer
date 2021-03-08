@@ -7,6 +7,6 @@ namespace StorageAnalyzer.Models
 {
     interface IExpandable
     {
-        public void SetChildrenItems();
+        public List<Item> GetChildrenItems();
     }
 }

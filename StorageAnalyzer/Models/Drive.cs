@@ -11,17 +11,17 @@ namespace StorageAnalyzer.Models
         public Drive(string fullPath) : base(fullPath)
         {
             Size = GetSize();
-            SetChildrenItems();
         }
 
-        public void SetChildrenItems()
+        public List<Item> GetChildrenItems()
         {
-            ChildrenItems.Clear();
+            var childrenItems = new List<Item>();
             var drive = new DirectoryInfo(FullPath);
             foreach (var dir in drive.GetDirectories())
             {
-                ChildrenItems.Add(new Folder(dir.FullName));
+                childrenItems.Add(new Folder(dir.FullName));
             }
+            return childrenItems;
         }
 
         public long GetSize()
