@@ -41,6 +41,10 @@ namespace StorageAnalyzer
             }
         }
 
+        public double SizeGb
+        {
+            get => Math.Round(Size / 1073741824.00, 2);
+        }
         public long Size 
         { 
             get => size;

@@ -27,9 +27,9 @@ namespace StorageAnalyzer.ViewModels
             get => Item.Name;
         }
 
-        public long Size
+        public double Size
         {
-            get => Item.Size;
+            get => Item.SizeGb;
         }
 
         public ObservableCollection<ItemViewModel> ChildrenItems
