@@ -5,27 +5,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using System.Windows.Input;
 
 namespace StorageAnalyzer
 {
     public class AppViewModel : BaseViewModel
     {
         private ObservableCollection<ItemViewModel> items;
-        private RelayCommand expandCommand;
-
-        public RelayCommand ExpandCommand
-        {
-            get
-            {
-                return expandCommand ??= new RelayCommand(obj =>
-                {
-                    foreach (var item in Items)
-                    {
-                        item.SetChildrenOnExpand();
-                    }
-                });
-            }
-        }
 
         public ObservableCollection<ItemViewModel> Items
         {

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Windows.Input;
 
 namespace StorageAnalyzer.ViewModels
 {
@@ -10,8 +11,16 @@ namespace StorageAnalyzer.ViewModels
     {
         private Item item;
         private ObservableCollection<ItemViewModel> childrenItems;
-        private bool isExpanded;
-        
+        private ICommand expandingCommand;
+
+        public ICommand ExpandingCommand
+        {
+            get
+            {
+                return expandingCommand ??= new RelayCommand((obj) => SetChildrenOnExpand());
+            }
+        }
+
 
         public string Name
         {
@@ -21,29 +30,6 @@ namespace StorageAnalyzer.ViewModels
         public long Size
         {
             get => Item.Size;
-        }
-
-        public bool IsExpanded
-        {
-            get => isExpanded;
-            set
-            {
-                if (value == isExpanded)
-                {
-                    return;
-                }
-                isExpanded = value;
-                if (value == true)
-                {
-                    SetChildrenOnExpand();
-                }
-                else
-                {
-                    ChildrenItems.Clear();
-                    ChildrenItems.Add(null);
-                }
-                OnPropertyChanged();
-            }
         }
 
         public ObservableCollection<ItemViewModel> ChildrenItems
@@ -87,7 +73,7 @@ namespace StorageAnalyzer.ViewModels
         public void SetChildrenOnExpand()
         {
             var expandableItem = Item as IExpandable;
-            if (expandableItem == null || IsExpanded == false)
+            if (expandableItem == null || !ChildrenItems.Contains(null))
             {
                 return;
             }

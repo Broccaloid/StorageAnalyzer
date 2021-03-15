@@ -36,9 +36,7 @@ namespace StorageAnalyzer
             get
             {
                 var normalizedPath = FullPath.Replace('/', '\\');
-
                 var lastIndex = normalizedPath.LastIndexOf('\\');
-
                 return FullPath.Substring(lastIndex + 1);
             }
         }
