@@ -10,7 +10,8 @@ namespace StorageAnalyzer.ViewModels
     {
         private Item item;
         private ObservableCollection<ItemViewModel> childrenItems;
-        private RelayCommand expandCommand;
+        private bool isExpanded;
+        
 
         public string Name
         {
@@ -21,24 +22,27 @@ namespace StorageAnalyzer.ViewModels
         {
             get => Item.Size;
         }
-        public RelayCommand ExpandCommand
+
+        public bool IsExpanded
         {
-            get
+            get => isExpanded;
+            set
             {
-                return expandCommand ??= new RelayCommand(obj =>
+                if (value == isExpanded)
                 {
-                    var item = obj as IExpandable;
-                    if (item == null)
-                    {
-                        return;
-                    }
+                    return;
+                }
+                isExpanded = value;
+                if (value == true)
+                {
+                    SetChildrenOnExpand();
+                }
+                else
+                {
                     ChildrenItems.Clear();
-                    var childrenItems = item.GetChildrenItems();
-                    foreach (var child in childrenItems)
-                    {
-                        ChildrenItems.Add(new ItemViewModel(child));
-                    }
-                });
+                    ChildrenItems.Add(null);
+                }
+                OnPropertyChanged();
             }
         }
 
@@ -80,7 +84,20 @@ namespace StorageAnalyzer.ViewModels
             }
         }
 
+        public void SetChildrenOnExpand()
+        {
+            var expandableItem = Item as IExpandable;
+            if (expandableItem == null || IsExpanded == false)
+            {
+                return;
+            }
+            ChildrenItems.Clear();
 
+            foreach (var item in expandableItem.GetChildrenItems())
+            {
+                ChildrenItems.Add(new ItemViewModel(item));
+            }
+        }
 
         
     }

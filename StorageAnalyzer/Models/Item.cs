@@ -31,16 +31,13 @@ namespace StorageAnalyzer
             }
         }
 
-        public string Name
+        public virtual string Name
         {
             get
             {
                 var normalizedPath = FullPath.Replace('/', '\\');
 
                 var lastIndex = normalizedPath.LastIndexOf('\\');
-
-                if (lastIndex == normalizedPath.IndexOf('\\'))
-                    return FullPath;
 
                 return FullPath.Substring(lastIndex + 1);
             }

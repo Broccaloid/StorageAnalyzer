@@ -13,6 +13,7 @@ namespace StorageAnalyzer.Models
             Size = GetSize();
         }
 
+        public override string Name => FullPath;
         public List<Item> GetChildrenItems()
         {
             var childrenItems = new List<Item>();

@@ -23,7 +23,7 @@ namespace StorageAnalyzer.Models
             long size = 0;
             foreach (var file in await GetAllFilesAsync(FullPath))
             {
-                size += file.Size;
+                size += file.Length;
             }
             return size;
         }
@@ -53,15 +53,22 @@ namespace StorageAnalyzer.Models
         private async Task<List<DirectoryInfo>> GetAllDirectoriesAsync(string path)
         {
             var mainFolder = new DirectoryInfo(path);
-            var allFolders = new List<DirectoryInfo>();
+            var allFolders = new List<DirectoryInfo>() { mainFolder };
             var tasks = new List<Task<List<DirectoryInfo>>>();
             try
             {
                 foreach (var directory in mainFolder.GetDirectories())
                 {
-                    if (directory.GetDirectories().Length != 0)
+                    try
                     {
-                        tasks.Add(GetAllDirectoriesAsync(directory.FullName));
+                        if (directory.GetDirectories().Length != 0)
+                        {
+                            tasks.Add(GetAllDirectoriesAsync(directory.FullName));
+                        }
+                    }
+                    catch (UnauthorizedAccessException e)
+                    {
+
                     }
                 }
                 var result = await Task.WhenAll(tasks);
@@ -77,23 +84,29 @@ namespace StorageAnalyzer.Models
             return allFolders;
         }
 
-        private async Task<List<Item>> GetAllFilesAsync(string path)
+        private async Task<List<FileInfo>> GetAllFilesAsync(string path)
         {
-            var allFiles = new List<Item>();
-            var tasks = new List<Task<List<Item>>>();
+            var allFiles = new List<FileInfo>();
             try
             {
                 foreach (var folder in await GetAllDirectoriesAsync(path))
                 {
-                    foreach (var file in folder.GetFiles())
+                    try
                     {
-                        allFiles.Add(new File(file.FullName));
+                        foreach (var file in folder.GetFiles())
+                        {
+                            allFiles.Add(file);
+                        }
+                    }
+                    catch (UnauthorizedAccessException e)
+                    {
+
                     }
                 }
             }
-            catch(UnauthorizedAccessException e)
+            catch (UnauthorizedAccessException e)
             {
-               
+
             }
             return allFiles;
         }
