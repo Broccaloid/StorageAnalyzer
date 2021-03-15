@@ -65,6 +65,10 @@ namespace StorageAnalyzer.Models
                         {
                             tasks.Add(GetAllDirectoriesAsync(directory.FullName));
                         }
+                        else
+                        {
+                            allFolders.Add(directory);
+                        }
                     }
                     catch (UnauthorizedAccessException e)
                     {
