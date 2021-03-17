@@ -1,8 +1,13 @@
-﻿using StorageAnalyzer.Models;
+﻿
+
+using Microsoft.Extensions.Logging;
+using NLog;
+using StorageAnalyzer.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace StorageAnalyzer.ViewModels
@@ -12,6 +17,7 @@ namespace StorageAnalyzer.ViewModels
         private Item item;
         private ObservableCollection<ItemViewModel> childrenItems;
         private ICommand expandingCommand;
+        private static Logger itemViewModelLogger = LogManager.GetLogger("LoggerRules");
 
         public ICommand ExpandingCommand
         {
@@ -70,16 +76,17 @@ namespace StorageAnalyzer.ViewModels
             }
         }
 
-        public void SetChildrenOnExpand()
+        public async Task SetChildrenOnExpand()
         {
             var expandableItem = Item as IExpandable;
             if (expandableItem == null || !ChildrenItems.Contains(null))
             {
                 return;
             }
+            itemViewModelLogger.Info($"Node {Name} was expanded");
             ChildrenItems.Clear();
 
-            foreach (var item in expandableItem.GetChildrenItems())
+            foreach (var item in await Task.Run(() => expandableItem.GetChildrenItems()))
             {
                 ChildrenItems.Add(new ItemViewModel(item));
             }

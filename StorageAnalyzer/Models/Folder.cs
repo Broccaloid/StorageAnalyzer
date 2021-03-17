@@ -45,7 +45,7 @@ namespace StorageAnalyzer.Models
             }
             catch (UnauthorizedAccessException e)
             {
-
+                itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
             };
             return childrenItems;
         }
@@ -72,7 +72,7 @@ namespace StorageAnalyzer.Models
                     }
                     catch (UnauthorizedAccessException e)
                     {
-
+                        itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
                     }
                 }
                 var result = await Task.WhenAll(tasks);
@@ -83,7 +83,7 @@ namespace StorageAnalyzer.Models
             }
             catch (UnauthorizedAccessException e)
             {
-
+                itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
             }
             return allFolders;
         }
@@ -91,26 +91,19 @@ namespace StorageAnalyzer.Models
         private async Task<List<FileInfo>> GetAllFilesAsync(string path)
         {
             var allFiles = new List<FileInfo>();
-            try
+            foreach (var folder in await GetAllDirectoriesAsync(path))
             {
-                foreach (var folder in await GetAllDirectoriesAsync(path))
+                try
                 {
-                    try
+                    foreach (var file in folder.GetFiles())
                     {
-                        foreach (var file in folder.GetFiles())
-                        {
-                            allFiles.Add(file);
-                        }
-                    }
-                    catch (UnauthorizedAccessException e)
-                    {
-
+                        allFiles.Add(file);
                     }
                 }
-            }
-            catch (UnauthorizedAccessException e)
-            {
-
+                catch (UnauthorizedAccessException e)
+                {
+                    itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
+                }
             }
             return allFiles;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ namespace StorageAnalyzer
     {
         private string fullPath;
         private long size;
+        protected static Logger itemLogger = LogManager.GetLogger("LoggerRules");
 
         public string FullPath
         {

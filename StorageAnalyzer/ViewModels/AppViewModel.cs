@@ -1,4 +1,5 @@
-﻿using StorageAnalyzer.Models;
+﻿using NLog;
+using StorageAnalyzer.Models;
 using StorageAnalyzer.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace StorageAnalyzer
     public class AppViewModel : BaseViewModel
     {
         private ObservableCollection<ItemViewModel> items;
+        private static Logger appViewModelLogger = LogManager.GetLogger("LoggerRules");
 
         public ObservableCollection<ItemViewModel> Items
         {
@@ -37,6 +39,7 @@ namespace StorageAnalyzer
                     Items.Add(new ItemViewModel(new Drive(drive.Name)));
                 }
             }
+            appViewModelLogger.Info("App was started successfully");
         }
 
     }

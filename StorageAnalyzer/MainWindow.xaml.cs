@@ -25,8 +25,6 @@ namespace StorageAnalyzer
         public MainWindow()
         {
             InitializeComponent();
-
-            this.DataContext = new AppViewModel();
         }
 
 

@@ -16,12 +16,21 @@ namespace StorageAnalyzer.Models
         public override string Name => FullPath;
         public List<Item> GetChildrenItems()
         {
+
             var childrenItems = new List<Item>();
             var drive = new DirectoryInfo(FullPath);
-            foreach (var dir in drive.GetDirectories())
+            try
             {
-                childrenItems.Add(new Folder(dir.FullName));
+                foreach (var dir in drive.GetDirectories())
+                {
+                    childrenItems.Add(new Folder(dir.FullName));
+                }
             }
+            catch (UnauthorizedAccessException e)
+            {
+                itemLogger.Error($"Failed to get access to drives content. Exception message: {e.Message}");
+            }
+
             return childrenItems;
         }
 
