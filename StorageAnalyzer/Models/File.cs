@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StorageAnalyzer.Models
 {
-    public class File : Item
+    public class File : BaseItem
     {
         public File(string fullPath) : base(fullPath)
         {

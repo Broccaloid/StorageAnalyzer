@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StorageAnalyzer.Models
 {
-    public class Folder : Item, IExpandable
+    public class Folder : BaseItem, IExpandable
     {
         public Folder(string fullPath) : base(fullPath)
         {
@@ -28,9 +28,9 @@ namespace StorageAnalyzer.Models
             return size;
         }
 
-        public List<Item> GetChildrenItems()
+        public List<IItem> GetChildrenItems()
         {
-            var childrenItems = new List<Item>();
+            var childrenItems = new List<IItem>();
             try
             {
                 var drive = new DirectoryInfo(FullPath);

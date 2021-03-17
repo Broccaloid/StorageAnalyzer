@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace StorageAnalyzer.Models
 {
-    public class Drive : Item, IExpandable
+    public class Drive : BaseItem, IExpandable
     {
         public Drive(string fullPath) : base(fullPath)
         {
@@ -14,10 +15,10 @@ namespace StorageAnalyzer.Models
         }
 
         public override string Name => FullPath;
-        public List<Item> GetChildrenItems()
+        public List<IItem> GetChildrenItems()
         {
 
-            var childrenItems = new List<Item>();
+            var childrenItems = new List<IItem>();
             var drive = new DirectoryInfo(FullPath);
             try
             {

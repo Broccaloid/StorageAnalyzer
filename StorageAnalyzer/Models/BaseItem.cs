@@ -1,4 +1,5 @@
 ﻿using NLog;
+using StorageAnalyzer.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,10 +10,10 @@ using System.Text;
 
 namespace StorageAnalyzer
 {
-    public abstract class Item : INotifyPropertyChanged
+    public class BaseItem : INotifyPropertyChanged, IItem
     {
         private string fullPath;
-        private long size;
+        protected long size;
         protected static Logger itemLogger = LogManager.GetLogger("LoggerRules");
 
         public string FullPath
@@ -47,7 +48,12 @@ namespace StorageAnalyzer
         {
             get => Math.Round(Size / 1073741824.00, 2);
         }
-        public long Size 
+
+        public double SizeMb
+        {
+            get => Math.Round(Size / 1048576.00, 2);
+        }
+        public virtual long Size 
         { 
             get => size;
             set
@@ -61,7 +67,7 @@ namespace StorageAnalyzer
             }
         }
 
-        public Item(string fullPath)
+        public BaseItem(string fullPath)
         {
             FullPath = fullPath;
         }

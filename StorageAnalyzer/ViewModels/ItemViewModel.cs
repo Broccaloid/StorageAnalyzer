@@ -14,7 +14,7 @@ namespace StorageAnalyzer.ViewModels
 {
     public class ItemViewModel : BaseViewModel
     {
-        private Item item;
+        private IItem item;
         private ObservableCollection<ItemViewModel> childrenItems;
         private ICommand expandingCommand;
         private static Logger itemViewModelLogger = LogManager.GetLogger("LoggerRules");
@@ -33,9 +33,16 @@ namespace StorageAnalyzer.ViewModels
             get => Item.Name;
         }
 
-        public double Size
+        public string Size
         {
-            get => Item.SizeGb;
+            get
+            {
+                if(Item.SizeGb == 0)
+                {
+                    return $" {Item.SizeMb} Mb";
+                }
+                return $" {Item.SizeGb} Gb";
+            }
         }
 
         public ObservableCollection<ItemViewModel> ChildrenItems
@@ -52,7 +59,7 @@ namespace StorageAnalyzer.ViewModels
             }
         }
 
-        public Item Item
+        public IItem Item
         {
             get => item;
             set
@@ -66,7 +73,7 @@ namespace StorageAnalyzer.ViewModels
             }
         }
 
-        public ItemViewModel(Item item)
+        public ItemViewModel(IItem item)
         {
             Item = item;
             ChildrenItems = new ObservableCollection<ItemViewModel>();
