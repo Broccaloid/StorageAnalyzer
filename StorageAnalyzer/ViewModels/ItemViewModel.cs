@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using NLog;
 using StorageAnalyzer.Models;
 using System;
@@ -15,8 +13,8 @@ namespace StorageAnalyzer.ViewModels
     public class ItemViewModel : BaseViewModel
     {
         private IItem item;
-        private ObservableCollection<ItemViewModel> childrenItems;
         private ICommand expandingCommand;
+        private ObservableCollection<ItemViewModel> childrenItems;
         private static Logger itemViewModelLogger = LogManager.GetLogger("LoggerRules");
 
         public ICommand ExpandingCommand

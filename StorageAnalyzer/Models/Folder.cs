@@ -11,21 +11,36 @@ namespace StorageAnalyzer.Models
     {
         public Folder(string fullPath) : base(fullPath)
         {
-            SetSizeAsync();
+            Size = GetSizeAsync(fullPath).Result;
         }
 
-        private async Task SetSizeAsync()
+        private async Task<long> GetSizeAsync(string path)
         {
-            Size = await GetSizeAsync();
-        }
-        private async Task<long> GetSizeAsync()
-        {
-            long size = 0;
-            foreach (var file in await GetAllFilesAsync(FullPath))
+            var tasks = new List<Task<long>>();
+            var directory = new DirectoryInfo(path);
+            long folderSize = 0;
+            try
             {
-                size += file.Length;
+                foreach (var file in directory.GetFiles())
+                {
+                    folderSize += file.Length;
+                }
+
+                foreach (var dir in directory.GetDirectories())
+                {
+                    tasks.Add(Task.Run(() => GetSizeAsync(dir.FullName)));
+                }
             }
-            return size;
+            catch (UnauthorizedAccessException e)
+            {
+                itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
+            }
+            var results = await Task.WhenAll(tasks);
+            foreach (var item in results)
+            {
+                folderSize += item;
+            }
+            return folderSize;
         }
 
         public List<IItem> GetChildrenItems()
@@ -48,64 +63,6 @@ namespace StorageAnalyzer.Models
                 itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
             };
             return childrenItems;
-        }
-
-        private async Task<List<DirectoryInfo>> GetAllDirectoriesAsync(string path)
-        {
-            var mainFolder = new DirectoryInfo(path);
-            var allFolders = new List<DirectoryInfo>() { mainFolder };
-            var tasks = new List<Task<List<DirectoryInfo>>>();
-            try
-            {
-                foreach (var directory in mainFolder.GetDirectories())
-                {
-                    try
-                    {
-                        if (directory.GetDirectories().Length != 0)
-                        {
-                            tasks.Add(GetAllDirectoriesAsync(directory.FullName));
-                        }
-                        else
-                        {
-                            allFolders.Add(directory);
-                        }
-                    }
-                    catch (UnauthorizedAccessException e)
-                    {
-                        itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
-                    }
-                }
-                var result = await Task.WhenAll(tasks);
-                foreach (var item in result)
-                {
-                    allFolders.AddRange(item);
-                }
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
-            }
-            return allFolders;
-        }
-
-        private async Task<List<FileInfo>> GetAllFilesAsync(string path)
-        {
-            var allFiles = new List<FileInfo>();
-            foreach (var folder in await GetAllDirectoriesAsync(path))
-            {
-                try
-                {
-                    foreach (var file in folder.GetFiles())
-                    {
-                        allFiles.Add(file);
-                    }
-                }
-                catch (UnauthorizedAccessException e)
-                {
-                    itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
-                }
-            }
-            return allFiles;
         }
     }
 }

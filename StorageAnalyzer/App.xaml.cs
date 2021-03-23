@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -20,6 +21,7 @@ namespace StorageAnalyzer
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            ThreadPool.SetMaxThreads(10, 10);
             MainWindow = new MainWindow()
             {
                 DataContext = new AppViewModel()
