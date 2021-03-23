@@ -10,7 +10,7 @@ using System.Text;
 
 namespace StorageAnalyzer
 {
-    public class BaseItem : INotifyPropertyChanged, IItem
+    public abstract class BaseItem : INotifyPropertyChanged, IItem
     {
         private string fullPath;
         protected long size;
@@ -44,15 +44,6 @@ namespace StorageAnalyzer
             }
         }
 
-        public double SizeGb
-        {
-            get => Math.Round(Size / 1073741824.00, 2);
-        }
-
-        public double SizeMb
-        {
-            get => Math.Round(Size / 1048576.00, 2);
-        }
         public virtual long Size 
         { 
             get => size;

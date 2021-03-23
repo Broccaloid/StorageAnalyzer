@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StorageAnalyzer.Models
 {
-    public class Drive : BaseItem, IExpandable
+    public class Drive : ExpandableItem
     {
         public Drive(string fullPath) : base(fullPath)
         {
@@ -15,25 +15,6 @@ namespace StorageAnalyzer.Models
         }
 
         public override string Name => FullPath;
-        public List<IItem> GetChildrenItems()
-        {
-
-            var childrenItems = new List<IItem>();
-            var drive = new DirectoryInfo(FullPath);
-            try
-            {
-                foreach (var dir in drive.GetDirectories())
-                {
-                    childrenItems.Add(new Folder(dir.FullName));
-                }
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                itemLogger.Error($"Failed to get access to drives content. Exception message: {e.Message}");
-            }
-
-            return childrenItems;
-        }
 
         public long GetSize()
         {

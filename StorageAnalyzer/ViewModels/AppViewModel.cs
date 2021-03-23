@@ -12,10 +12,10 @@ namespace StorageAnalyzer
 {
     public class AppViewModel : BaseViewModel
     {
-        private ObservableCollection<ItemViewModel> items;
+        private ObservableCollection<ExpandableItemViewModel> items;
         private static Logger appViewModelLogger = LogManager.GetLogger("LoggerRules");
 
-        public ObservableCollection<ItemViewModel> Items
+        public ObservableCollection<ExpandableItemViewModel> Items
         {
             get => items;
             set
@@ -31,12 +31,12 @@ namespace StorageAnalyzer
 
         public AppViewModel()
         {
-            Items = new ObservableCollection<ItemViewModel>();
+            Items = new ObservableCollection<ExpandableItemViewModel>();
             foreach (var drive in DriveInfo.GetDrives())
             {
                 if (drive.IsReady)
                 {
-                    Items.Add(new ItemViewModel(new Drive(drive.Name)));
+                    Items.Add(new ExpandableItemViewModel(new Drive(drive.Name)));
                 }
             }
             appViewModelLogger.Info("App was started successfully");

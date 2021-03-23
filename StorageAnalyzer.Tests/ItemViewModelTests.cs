@@ -18,10 +18,10 @@ namespace StorageAnalyzer.Tests
             // Arrange
             var mock = new Mock<IExpandable>();
             mock.Setup(mock => mock.GetChildrenItems()).Returns(new List<IItem>() { new Mock<IItem>().Object});
-            var itemViewModel = new ItemViewModel(mock.Object);
+            var itemViewModel = new ExpandableItemViewModel(mock.Object);
             // Act
 
-            await itemViewModel.SetChildrenOnExpand();
+            await itemViewModel.SetChildrenOnExpandAsync();
 
             // Assert
             Assert.True(itemViewModel.ChildrenItems.Count > 0);
@@ -32,10 +32,10 @@ namespace StorageAnalyzer.Tests
         {
             // Arrange
             var mock = new Mock<IItem>();
-            var itemViewModel = new ItemViewModel(mock.Object);
+            var itemViewModel = new ExpandableItemViewModel(mock.Object);
             // Act
 
-            await itemViewModel.SetChildrenOnExpand();
+            await itemViewModel.SetChildrenOnExpandAsync();
 
             // Assert
             Assert.True(itemViewModel.ChildrenItems.Count == 0);

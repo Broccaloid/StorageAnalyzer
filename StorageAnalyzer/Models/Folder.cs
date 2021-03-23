@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StorageAnalyzer.Models
 {
-    public class Folder : BaseItem, IExpandable
+    public class Folder : ExpandableItem
     {
         public Folder(string fullPath) : base(fullPath)
         {
@@ -41,28 +41,6 @@ namespace StorageAnalyzer.Models
                 folderSize += item;
             }
             return folderSize;
-        }
-
-        public List<IItem> GetChildrenItems()
-        {
-            var childrenItems = new List<IItem>();
-            try
-            {
-                var drive = new DirectoryInfo(FullPath);
-                foreach (var dir in drive.GetDirectories())
-                {
-                    childrenItems.Add(new Folder(dir.FullName));
-                }
-                foreach (var file in drive.GetFiles())
-                {
-                    childrenItems.Add(new File(file.FullName));
-                }
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                itemLogger.Error($"Can't get an access to a folder. Exception message: {e.Message}");
-            };
-            return childrenItems;
         }
     }
 }
